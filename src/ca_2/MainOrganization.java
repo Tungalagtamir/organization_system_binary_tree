@@ -4,6 +4,7 @@
  */
 package ca_2;
 import java.util.*;
+import java.io.*;
 
 /**
  *
@@ -14,6 +15,7 @@ import java.util.*;
 public class MainOrganization {
     private Scanner scanner;
     private List<Employee> employees;
+    
 
     // Basic menu enum
     enum MenuOption {
@@ -22,6 +24,54 @@ public class MainOrganization {
 
     public MainOrganization() {
         this.scanner = new Scanner(System.in);
+        this.employees = new ArrayList<>(); // Initialize the list
+        initializeSystem();
+    }
+    
+    private void initializeSystem() {
+        System.out.println("=== Bank Organization Management System ===");
+        while (true) {
+            System.out.print("Please enter the filename to read (Applicants_Form.txt): ");
+            String filename = scanner.nextLine().trim();
+
+            if (filename.isEmpty()) {
+                filename = "Applicants_Form.txt";
+            }
+
+            if (loadDataFromFile(filename)) {
+                return;
+            } else {
+                System.out.println("\nFile '" + filename + "' not found! Try again.");
+            }
+        }
+    }
+    
+    private boolean loadDataFromFile(String filename) {
+        try {
+            File file = new File(filename);
+            if (!file.exists()) {
+                return false;
+            }
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line;
+            Random random = new Random();
+
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    Department dept = Department.values()[random.nextInt(Department.values().length)];
+                    ManagerType mgrType = ManagerType.values()[random.nextInt(ManagerType.values().length)];
+                    employees.add(new Employee(line.trim(), dept, mgrType));
+                }
+            }
+            reader.close();
+            System.out.println("File '" + filename + "' read successfully! Loaded " + employees.size() + " employees.");
+            return true;
+
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+            return false;
+        }
     }
 
     public void displayMenu() {
@@ -78,7 +128,7 @@ public class MainOrganization {
 
                 switch (selectedOption) {
                     case EXIT:
-                        System.out.println("Thank you for using Bank Organization System! Goodbye!");
+                        System.out.println("Seen you!");
                         return;
                     default:
                         System.out.println("Feature not implemented yet - selected: " + selectedOption);
@@ -90,6 +140,7 @@ public class MainOrganization {
         }
     }
 
+ 
     public static void main(String[] args) {
         MainOrganization system = new MainOrganization();
         system.run();
