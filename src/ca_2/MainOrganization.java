@@ -15,6 +15,7 @@ import java.io.*;
 public class MainOrganization {
     private Scanner scanner;
     private List<Employee> employees;
+    private EmployeeService employeeService;
 
     // Basic menu enum
     enum MenuOption {
@@ -23,7 +24,8 @@ public class MainOrganization {
 
     public MainOrganization() {
         this.scanner = new Scanner(System.in);
-        this.employees = new ArrayList<>(); // Initialize the list
+        this.employees = new ArrayList<>();
+        this.employeeService = new EmployeeService();
         initializeSystem();
     }
 
@@ -71,6 +73,25 @@ public class MainOrganization {
             System.out.println("Error reading file: " + e.getMessage());
             return false;
         }
+    }
+
+    public void sortAndDisplay() {
+        System.out.println("\n=== Sorting Employees (Using Merge Sort) ===");
+
+        if (employees.isEmpty()) {
+            System.out.println("No employees to sort.");
+            return;
+        }
+
+        List<Employee> sortedEmployees = employeeService.mergeSort(employees);
+
+        System.out.println("\nFirst 20 sorted employee names:");
+        System.out.println("================================");
+        for (int i = 0; i < Math.min(20, sortedEmployees.size()); i++) {
+            System.out.printf("%2d. %s\n", (i + 1), sortedEmployees.get(i).getName());
+        }
+
+        employees = sortedEmployees;
     }
 
     public void displayMenu() {
@@ -127,6 +148,9 @@ public class MainOrganization {
                 MenuOption selectedOption = options[choice - 1];
 
                 switch (selectedOption) {
+                    case SORT:
+                        sortAndDisplay();
+                        break;
                     case DISPLAY_ALL:
                         displayAllEmployees();
                         break;
