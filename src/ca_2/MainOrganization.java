@@ -16,6 +16,8 @@ public class MainOrganization {
     private Scanner scanner;
     private List<Employee> employees;
     private EmployeeService employeeService;
+    private List<Employee> newlyAddedEmployees;
+    private EmployeeBinaryTree employeeTree;
 
     // Basic menu enum
     enum MenuOption {
@@ -26,6 +28,7 @@ public class MainOrganization {
         this.scanner = new Scanner(System.in);
         this.employees = new ArrayList<>();
         this.employeeService = new EmployeeService();
+        this.employeeTree = new EmployeeBinaryTree();
         initializeSystem();
     }
 
@@ -118,6 +121,62 @@ public class MainOrganization {
         }
     }
 
+    public void addNewEmployee() {
+        System.out.println("\n=== Add New Bank Employee ===");
+
+        // Get employee name
+        System.out.print("Enter employee full name: ");
+        String name = scanner.nextLine().trim();
+
+        if (name.isEmpty()) {
+            System.out.println("Invalid name! Please enter a valid name.");
+            return;
+        }
+
+        // Display and get manager type
+        System.out.println("\nAvailable Manager Types:");
+        for (int i = 0; i < ManagerType.values().length; i++) {
+            ManagerType type = ManagerType.values()[i];
+            System.out.printf("%d. %s - %s (Level %d)\n",
+                    i + 1, type, type.getDescription(), type.getHierarchyLevel());
+        }
+        System.out.print("Choose manager type (1-" + ManagerType.values().length + "): ");
+
+        ManagerType managerType;
+        try {
+            int mgrChoice = Integer.parseInt(scanner.nextLine());
+            managerType = ManagerType.values()[mgrChoice - 1];
+        } catch (Exception e) {
+            System.out.println("Invalid manager type selection!");
+            return;
+        }
+
+        // Display and get department
+        System.out.println("\nAvailable Departments:");
+        for (int i = 0; i < Department.values().length; i++) {
+            Department dept = Department.values()[i];
+            System.out.printf("%d. %s - %s\n", i + 1, dept.getFullName(), dept.getDescription());
+        }
+        System.out.print("Choose department (1-" + Department.values().length + "): ");
+
+        Department department;
+        try {
+            int deptChoice = Integer.parseInt(scanner.nextLine());
+            department = Department.values()[deptChoice - 1];
+        } catch (Exception e) {
+            System.out.println("Invalid department selection!");
+            return;
+        }
+
+        // Create and add new employee
+        Employee newEmployee = new Employee(name, department, managerType);
+        employees.add(newEmployee);
+        newlyAddedEmployees.add(newEmployee);
+
+        System.out.println("\n Employee added successfully!");
+        System.out.println(newEmployee.getDetails());
+    }
+
     public void displayMenu() {
         System.out.println("\n=== Bank Organization System Menu ===");
         int optionNumber = 1;
@@ -177,6 +236,9 @@ public class MainOrganization {
                         break;
                     case SEARCH:
                         searchEmployee();
+                        break;
+                    case ADD_RECORDS:
+                        addNewEmployee();
                         break;
                     case DISPLAY_ALL:
                         displayAllEmployees();
