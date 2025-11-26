@@ -59,4 +59,33 @@ public class EmployeeBinaryTree {
     public int getNodeCount() {
         return nodeCount;
     }
+
+    public void displayLevelOrder() {
+        if (root == null) {
+            System.out.println("Tree is empty!");
+            return;
+        }
+
+        Queue<EmployeeTreeNode> queue = new LinkedBlockingQueue<>();
+        queue.add(root);
+        int level = 0;
+
+        System.out.println("\n=== Employee Hierarchy (Level Order) ===");
+
+        while (!queue.isEmpty()) {
+            int levelSize = queue.size();
+            System.out.println("\n--- Level " + level + " ---");
+
+            for (int i = 0; i < levelSize; i++) {
+                EmployeeTreeNode current = queue.poll();
+                System.out.println(current.employee.getDetails());
+
+                if (current.left != null)
+                    queue.add(current.left);
+                if (current.right != null)
+                    queue.add(current.right);
+            }
+            level++;
+        }
+    }
 }

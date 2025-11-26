@@ -177,6 +177,32 @@ public class MainOrganization {
         System.out.println(newEmployee.getDetails());
     }
 
+    public void createBinaryTree() {
+        System.out.println("\n=== Creating Employee Hierarchy Binary Tree ===");
+
+        if (employees.isEmpty()) {
+            System.out.println("No employees to add to tree.");
+            return;
+        }
+
+        // Reset tree
+        employeeTree = new EmployeeBinaryTree();
+
+        System.out.println("Inserting " + employees.size() + " employees using level-order insertion...");
+
+        for (Employee employee : employees) {
+            employeeTree.insertLevelOrder(employee);
+        }
+
+        // Display tree information
+        System.out.println("\n Binary Tree Statistics:");
+        System.out.println("Total nodes inserted: " + employeeTree.getNodeCount());
+        System.out.println("Tree height: " + employeeTree.getHeight());
+
+        // Display the hierarchy
+        employeeTree.displayLevelOrder();
+    }
+
     public void displayMenu() {
         System.out.println("\n=== Bank Organization System Menu ===");
         int optionNumber = 1;
@@ -239,6 +265,9 @@ public class MainOrganization {
                         break;
                     case ADD_RECORDS:
                         addNewEmployee();
+                        break;
+                    case CREATE_BINARY_TREE:
+                        createBinaryTree();
                         break;
                     case DISPLAY_ALL:
                         displayAllEmployees();
